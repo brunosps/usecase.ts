@@ -1,16 +1,27 @@
 {
   "name": "usecase.ts",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Use cases for typescript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "build": "rimraf ./build && tsc"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunosps/usecase.ts.git"
+  },
+  "keywords": [
+    "usecase",
+    "usecases"
+  ],
+  "author": "Bruno Santos",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunosps/usecase.ts/issues"
+  },
+  "homepage": "https://github.com/brunosps/usecase.ts#readme",
   "devDependencies": {
     "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
