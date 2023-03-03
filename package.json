@@ -1,6 +1,6 @@
 {
-  "name": "usecase.ts",
-  "version": "1.0.1",
+  "name": "usecase",
+  "version": "0.0.1",
   "description": "Use cases for typescript",
   "main": "index.js",
   "scripts": {
