@@ -1,5 +1,5 @@
 {
-  "name": "usecase",
+  "name": "usecase.ts",
   "version": "0.0.1",
   "description": "Use cases for typescript",
   "main": "index.js",
