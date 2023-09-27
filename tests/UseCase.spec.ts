@@ -17,4 +17,10 @@ describe('Use Case Test', () => {
 
         expect(result.isSuccess()).toBeFalsy();
     });
+
+    it('', () => {        
+        const result = RegistraUsuario.call<UsuarioDto, RegistraUsuarioOutPut>({ nome: "" });
+
+        expect(result.isSuccess()).toBeFalsy();
+    });
 })
