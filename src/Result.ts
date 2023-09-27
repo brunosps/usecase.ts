@@ -4,12 +4,13 @@ import { ResultProps, TransitionType } from "./Types";
 
 export class Result<T> {
     resultType: string;
-    isSuccess: boolean;
     data: T
     error: ErrorObject;
     useCaseClass: string;
     context: any;
     transitions: TransitionType[];
+
+    private _isSuccess: boolean;
 
     constructor({
         resultType,
@@ -21,7 +22,7 @@ export class Result<T> {
         transitions }: ResultProps<T>) {
 
         this.resultType = resultType;
-        this.isSuccess = isSuccess;
+        this._isSuccess = isSuccess;
         this.data = {} as T;
         this.error = {} as ErrorObject;
         this.useCaseClass = ""
@@ -55,8 +56,12 @@ export class Result<T> {
         return this.data;
     }
 
+    isSuccess() {
+        return this._isSuccess
+    }
+
     isFailure() {
-        return !this.isSuccess
+        return !this._isSuccess
     }
 
     getType() {
@@ -84,7 +89,7 @@ export class Result<T> {
     mergeContext<U>(result: Result<U>, mergeable: Result<T>) {
         return new Result<U>({
             resultType: result.resultType,
-            isSuccess: result.isSuccess,
+            isSuccess: result._isSuccess,
             error: result.error,
             data: result.data,
             useCaseClass: result.useCaseClass,
@@ -94,7 +99,7 @@ export class Result<T> {
     }
 
     onSuccess(f: (data: T, res: Result<T>) => any): Result<T> {
-        if (this.isSuccess) {
+        if (this._isSuccess) {
             f(this.getValue(), this);
         }
 

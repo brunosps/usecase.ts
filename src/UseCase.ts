@@ -24,7 +24,7 @@ export class UseCase<I, O>{
     transition(input: I, result: Result<O>): TransitionType {
         return {
             resultType: result.getType(),
-            isSuccess: result.isSuccess,
+            isSuccess: result.isSuccess(),
             useCaseClass: this.constructor.name,
             inputValues: input,
             outputValues: result.isFailure() ? result.getError() : result.getValue(),
