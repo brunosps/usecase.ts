@@ -1,11 +1,10 @@
-import { ErrorObject } from "./ErrorObject";
 import { Failure } from "./Failure";
 import { ResultProps, TransitionType } from "./Types";
 
 export class Result<T> {
     resultType: string;
     data: T
-    error: ErrorObject;
+    error: Error;
     useCaseClass: string;
     context: any;
     transitions: TransitionType[];
@@ -24,8 +23,8 @@ export class Result<T> {
         this.resultType = resultType;
         this._isSuccess = isSuccess;
         this.data = {} as T;
-        this.error = {} as ErrorObject;
-        this.useCaseClass = ""
+        this.useCaseClass = "";
+        this.error = {} as Error;
 
         if (data) {
             this.data = data;
@@ -106,7 +105,7 @@ export class Result<T> {
         return this;
     }
 
-    onFailure(f: (error: ErrorObject, res: Result<T>) => any, failureType = "FAILURE"): Result<T> {
+    onFailure(f: (error: Error, res: Result<T>) => any, failureType = "FAILURE"): Result<T> {
         if (this.isFailure() && this.resultType === failureType) {
             f(this.getError(), this);
         }

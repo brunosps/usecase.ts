@@ -1,5 +1,4 @@
 
-export { ErrorObject } from './ErrorObject'
 export { Failure } from './Failure'
 export { Success } from './Success'
 export { Result } from './Result'

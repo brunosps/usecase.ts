@@ -1,4 +1,3 @@
-import { ErrorObject } from "./ErrorObject";
 
 export type TransitionType = {
     resultType: string;
@@ -12,7 +11,7 @@ export type TransitionType = {
 export type ResultProps<T> = {
     resultType: string;
     isSuccess: boolean;
-    error?: ErrorObject;
+    error?: Error;
     data?: T;
     context?: any;
     useCaseClass?: string;

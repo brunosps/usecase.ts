@@ -1,5 +1,22 @@
 import { Failure, Result, Success, UseCase } from "../../src";
 
+class BaseError extends Error {
+    constructor(message: string) {
+        super();
+        const constructorName = this.constructor.name;
+        this.name = constructorName;
+        this.message = message;
+    }
+}
+
+export class ApplicationError extends BaseError {
+    public readonly errors: any;
+    constructor(message: string, errors?: any) {
+        super(message);
+        this.errors = errors;
+    }
+}
+
 export class UsuarioDto {
     id?: number;
     nome: string;
@@ -21,7 +38,7 @@ export class RegistraUsuario extends UseCase<UsuarioDto, RegistraUsuarioOutPut> 
     execute(input: UsuarioDto): Result<RegistraUsuarioOutPut> {
         if (!input.nome || input.nome === "") {
             return Failure(
-                { property: "nome", errors: ["Nome é obrigatório"] },
+                new ApplicationError('Deu errado', { property: "nome", errors: ["Nome é obrigatório"] }),
                 "INVALID_ATTRIBUTE"
             );
         }
@@ -44,13 +61,13 @@ export class NormalizeAndValidateSSO extends UseCase<SyncSSODto, SyncSSODto> {
     execute(input: SyncSSODto): Result<SyncSSODto> {
         if (!input.nome || input.nome === "") {
             return Failure(
-                { property: "nome", errors: ["Nome é obrigatório"] },
+                new ApplicationError('Deu errado', { property: "nome", errors: ["Nome é obrigatório"] }),
                 "INVALID_ATTRIBUTE"
             );
         }
 
         if (!this.isEmail(input.email)) {
-            return Failure({ property: "email", errors: ["Email inválido"] });
+            return Failure(new ApplicationError('Deu errado', { property: "email", errors: ["Email inválido"] }));
         }
 
         const nome = input.nome.trim();
@@ -60,7 +77,8 @@ export class NormalizeAndValidateSSO extends UseCase<SyncSSODto, SyncSSODto> {
     }
 
     private isEmail(email: string) {
-        return true;
+        const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        return regex.test(email);
     }
 }
 
