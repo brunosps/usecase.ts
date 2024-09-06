@@ -1,44 +1,40 @@
-import { Failure } from "./Failure";
-import { Result } from "./Result";
-import { Success } from "./Success";
-import { TransitionType } from "./Types";
+import { Context } from './Context';
+import { Failure } from './Failure';
+import { Result } from './Result';
+import { Success } from './Success';
 
-export class UseCase<I, O>{
-    execute(input?: I): Result<O> {
-        throw new Error("Method not implemented.");
+interface IUseCase<I, O> {
+  execute(input?: I): Promise<Result<O>>;
+}
+
+export class UseCase<I, O> implements IUseCase<I, O> {
+  execute(input?: I): Promise<Result<O>> {
+    throw new Error('Method not implemented.');
+  }
+
+  async call(params: I): Promise<Result<O>> {
+    const result = await this.execute(params);
+
+    if (result.isFailure()) {
+      return Failure(
+        result.error,
+        result.resultType,
+        result.context,
+        this.constructor.name,
+      );
     }
 
-    __call(params?: I): Result<O> {
-        const result = this.execute(params)
-        const transition = this.transition(params as I, result);
-        const transitions = [...result.transitions, transition];
+    return Success(
+      result.data,
+      {
+        [this.constructor.name]: new Context<I, O>(params, result.data),
+      },
+      this.constructor.name,
+    );
+  }
 
-        if (result.isFailure()) {
-            return Failure(transition.outputValues, transition.resultType, transition.context, this.constructor.name, transitions);
-        }
-
-
-        return Success(transition.outputValues, transition.context, this.constructor.name, transitions)
-    }
-
-    transition(input: I, result: Result<O>): TransitionType {
-        return {
-            resultType: result.getType(),
-            isSuccess: result.isSuccess(),
-            useCaseClass: this.constructor.name,
-            inputValues: input,
-            outputValues: result.isFailure() ? result.getError() : result.getValue(),
-            context: { ...result.getContext(), ...input, ...result.getValue() },
-        }
-    }
-
-    static call<X, Y>(params?: X): Result<Y> {
-        const self = new this<X, Y>;
-        return self.__call(params);
-    }
-
-    call<X, Y>(_useCase: typeof UseCase<X, Y>, params: X): Result<Y> {
-        return _useCase.call<X, Y>(params);
-    }
-
+  static async call<X, Y>(params: X): Promise<Result<Y>> {
+    const self = new this<X, Y>();
+    return await self.call(params);
+  }
 }
